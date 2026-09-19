@@ -26,7 +26,7 @@ func (s *SubscriptionService) Create(ctx context.Context, recipientID uint, req 
 	if req.Active != nil {
 		active = *req.Active
 	}
-	item := &model.FamilySubscription{CareRecipientID: recipientID, FamilyName: req.FamilyName, FamilyPhone: req.FamilyPhone, Active: active}
+	item := &model.FamilySubscription{CareRecipientID: recipientID, FamilyName: req.FamilyName, FamilyPhone: req.FamilyPhone, Active: &active}
 	if err := s.repo.Create(ctx, item); err != nil {
 		return nil, err
 	}
