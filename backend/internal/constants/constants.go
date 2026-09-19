@@ -13,4 +13,8 @@ const (
 
 	SMSKindGreeting = "greeting"
 	SMSKindAlert    = "alert"
+
+	AlertLevelNone      = "none"
+	AlertLevelNormal    = "normal"
+	AlertLevelEscalated = "escalated"
 )

@@ -41,6 +41,7 @@ func main() {
 	templateRepo := repository.NewTemplateRepository(db)
 	smsLogRepo := repository.NewSMSLogRepository(db)
 	confirmRepo := repository.NewReplyConfirmRepository(db)
+	alertRecordRepo := repository.NewAlertRecordRepository(db)
 	if err := service.SeedDefaultTemplates(context.Background(), templateRepo); err != nil {
 		logger.Error("seed templates", "error", err)
 		os.Exit(1)
@@ -51,8 +52,8 @@ func main() {
 	provider := service.NewLogSMSSender(smsLogRepo, logger)
 	smsService := service.NewSMSService(provider)
 	notificationService := service.NewNotificationService(recipientRepo, templateRepo, smsService, logger)
-	alertService := service.NewAlertService(recipientRepo, subscriptionRepo, smsService, cfg.ConfirmTimeout, logger)
-	statusService := service.NewStatusService(recipientRepo, cfg.ConfirmTimeout)
+	alertService := service.NewAlertService(recipientRepo, subscriptionRepo, alertRecordRepo, smsService, cfg.ConfirmTimeout, logger)
+	statusService := service.NewStatusService(recipientRepo, alertRecordRepo, cfg.ConfirmTimeout)
 	jobs, err := scheduler.New(notificationService, alertService, cfg.GreetingCronExpression, cfg.AlertCronExpression, logger)
 	if err != nil {
 		logger.Error("create scheduler", "error", err)
